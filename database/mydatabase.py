@@ -53,13 +53,6 @@ SQLITE                  = 'sqlite'
 # POSTGRESQL              = 'postgresql'
 # MICROSOFT_SQL_SERVER    = 'mssqlserver'
 
-# Table Names
-USERS           = 'users'
-ADDRESSES       = 'addresses'
-CONVEYANCES     = 'conveyances'
-CONVEYANCE_PARCELS = 'conveyance_parcels'
-CONVEYANCE_DATES = 'conveyance_dates'
-
 
 class MyDatabase:
     # http://docs.sqlalchemy.org/en/latest/core/engines.html
@@ -76,9 +69,10 @@ class MyDatabase:
     def __init__(self, dbtype, username='', password='', dbname=''):
         dbtype = dbtype.lower()
 
-        metadata = MetaData()
+        self.metadata = MetaData()
 
-        self.conveyances = Table(CONVEYANCES, metadata,
+        # Define the tables
+        self.conveyances = Table('conveyances', self.metadata,
                             Column('conveyance_number', String, primary_key=True),
                             Column('sale_date', Date),
                             Column('sale_amount', Float),
@@ -93,16 +87,17 @@ class MyDatabase:
                             Column('site_address', String)
                             )
 
-        self.conveyance_parcels = Table(CONVEYANCE_PARCELS, metadata,
+        self.conveyance_parcels = Table('conveyance_parcels', self.metadata,
                                    Column('conveyance_parcel', String, primary_key=True),
                                    Column('conveyance_number_id', String, ForeignKey('conveyances.conveyance_number')),
                                    Column('parcel_number', String)
                                    )
 
-        self.conveyance_dates = Table(CONVEYANCE_DATES, metadata,
+        self.conveyance_dates = Table('conveyance_dates', self.metadata,
                                  Column('conveyance_date', Date, primary_key=True),
                                  Column('processed', Boolean),
-                                 Column('processed_dates', Date)
+                                 Column('processed_date', Date),
+                                 Column('records_processed', Integer)
                                  )
 
         if dbtype in self.DB_ENGINE.keys():
@@ -110,10 +105,10 @@ class MyDatabase:
 
             self.db_engine = create_engine(engine_url)
             print(self.db_engine)
-
         else:
             print("DBType is not found in DB_ENGINE")
 
+    # Create tables defined in the Class
     def create_db_tables(self):
         try:
             self.metadata.create_all(self.db_engine)
@@ -179,11 +174,15 @@ class MyDatabase:
         self.print_all_data(USERS)
         '''
 
-    def insert_conveyance(self, conveyance_dict):
+    def insert_conveyance_record(self, data_dict):
         # Insert Data
-        stmt = self.conveyances.insert().values(conveyance_dict)
+        stmt = self.conveyances.insert().values(data_dict)
         self.execute_query(stmt)
 
+    def insert_conveyance_date_record(self, data_dict):
+        # Insert Data
+        stmt = self.conveyance_dates.insert().values(data_dict)
+        self.execute_query(stmt)
 
     def sample_insert(self):
         # Insert Data
