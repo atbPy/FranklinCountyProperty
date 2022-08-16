@@ -28,7 +28,7 @@ def open_and_read_file(DOWNLOAD_FILE, FILE_DATE, current_date):
                                      "LUC": row[11],
                                      "site_address": row[12]
                                      }
-            print(conveyance_record)
+
             database_helper.insert_record("conveyances", conveyance_record)
 
         conveyance_date_record = {"conveyance_date": FILE_DATE,
@@ -36,17 +36,17 @@ def open_and_read_file(DOWNLOAD_FILE, FILE_DATE, current_date):
                                   "processed_date": current_date,
                                   "records_processed": record_count
                                   }
+        print(conveyance_date_record)
 
         # If the record already exists, then just update the fields instead of inserting
-        # Todo: make this a function instead of putting the query in this
-        if (database_helper.execute_select_query(f"SELECT * FROM 'conveyance_dates' WHERE 'conveyance_date' = '{FILE_DATE}';")) is None:
+        if (database_helper.execute_select_query('conveyance_dates', 'conveyance_date', FILE_DATE)) == 0:
             database_helper.insert_record("conveyance_dates", conveyance_date_record)
         else:
             conveyance_date_record = {"processed": True,
                                       "processed_date": current_date,
                                       "records_processed": record_count
                                       }
-            database_helper.update_record("conveyance_dates", conveyance_date_record)
+            database_helper.update_record("conveyance_dates", f"'conveyance_dates.conveyance_date'='{FILE_DATE}'", conveyance_date_record)
 
 
 

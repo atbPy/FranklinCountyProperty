@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Date, Float, Boolean
-
-db_engine = None
+from sqlalchemy import select
+from sqlalchemy import text
 
 metadata = MetaData()
 
@@ -51,7 +51,7 @@ def create_db_tables():
 def execute_query(query=''):
     if query == '': return
 
-    print(query)
+    #print(query)
     with db_engine.connect() as connection:
         try:
             connection.execute(query)
@@ -59,18 +59,19 @@ def execute_query(query=''):
             print(e)
 
 
-def execute_select_query(query=''):
-    if query == '': return
+def execute_select_query(table, field, value):
+    # query = select(conveyance_dates).where(conveyance_dates.c.conveyance_date == '2022-08-15')
+    query = f"SELECT * FROM {table} WHERE {table}.{field} = '{value}'"
 
-    print(query)
     with db_engine.connect() as connection:
         try:
             result = connection.execute(query)
         except Exception as e:
             print(e)
         else:
+            results_length = len(result.all())
             result.close()
-            return result
+            return results_length
 
 
 def print_all_data(table=''):
@@ -90,7 +91,7 @@ def print_all_data(table=''):
 
 def insert_record(table, data_dict):
     # Insert Data
-    if table == "conveyance":
+    if table == "conveyances":
         stmt = conveyances.insert().values(data_dict)
     elif table == "conveyance_parcels":
         stmt = conveyance_parcels.insert().values(data_dict)
@@ -101,14 +102,15 @@ def insert_record(table, data_dict):
 
     execute_query(stmt)
 
-def update_record(table, data_dict):
+
+def update_record(table, where_clause, data_dict):
     # Update Data
-    if table == "conveyance":
-        stmt = conveyances.update().values(data_dict)
+    if table == "conveyances":
+        stmt = conveyances.update().where(text(where_clause)).values(data_dict)
     elif table == "conveyance_parcels":
-        stmt = conveyance_parcels.update().values(data_dict)
+        stmt = conveyance_parcels.update().where(text(where_clause)).values(data_dict)
     elif table == "conveyance_dates":
-        stmt = conveyance_dates.update().values(data_dict)
+        stmt = conveyance_dates.update().where(text(where_clause)).values(data_dict)
     else:
         return
 
