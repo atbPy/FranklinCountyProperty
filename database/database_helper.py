@@ -24,7 +24,8 @@ conveyances = Table('conveyances', metadata,
 conveyance_parcels = Table('conveyance_parcels', metadata,
                            Column('conveyance_parcel', String, primary_key=True),
                            Column('conveyance_number_id', String, ForeignKey('conveyances.conveyance_number')),
-                           Column('parcel_number', String)
+                           Column('parcel_number', String),
+                           Column('conveyance_date', Date)
                            )
 
 conveyance_dates = Table('conveyance_dates', metadata,
@@ -74,8 +75,8 @@ def execute_select_query(table, field, value):
             return results_length
 
 
-def print_all_data(table=''):
-    query = "SELECT * FROM '{}';".format(table)
+def print_all_data(table):
+    query = f"SELECT * FROM {table};"
     print(query)
 
     with db_engine.connect() as connection:
