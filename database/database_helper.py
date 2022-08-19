@@ -16,16 +16,16 @@ conveyances = Table('conveyances', metadata,
                     Column('owner_name_1', String),
                     Column('owner_name_2', String),
                     Column('owner_address_1', String),
-                    Column('owner_address_2', String),
-                    Column('LUC', String),
-                    Column('site_address', String)
+                    Column('owner_address_2', String)
                     )
 
 conveyance_parcels = Table('conveyance_parcels', metadata,
                            Column('conveyance_parcel', String, primary_key=True),
                            Column('conveyance_number_id', String, ForeignKey('conveyances.conveyance_number')),
                            Column('parcel_number', String),
-                           Column('conveyance_date', Date)
+                           Column('conveyance_date', Date),
+                           Column('LUC', String, ForeignKey('land_use_codes.land_use_code')),
+                           Column('site_address', String)
                            )
 
 conveyance_dates = Table('conveyance_dates', metadata,
@@ -34,6 +34,12 @@ conveyance_dates = Table('conveyance_dates', metadata,
                          Column('processed_date', Date),
                          Column('records_processed', Integer)
                          )
+
+land_use_codes = Table('land_use_codes', metadata,
+                       Column('land_use_code', String, primary_key=True),
+                       Column('description', String),
+                       Column('active', Boolean)
+                       )
 
 db_engine = create_engine('sqlite:///franklinCountyConveyances.sqlite', echo=True)
 print(db_engine)
@@ -98,7 +104,10 @@ def insert_record(table, data_dict):
         stmt = conveyance_parcels.insert().values(data_dict)
     elif table == "conveyance_dates":
         stmt = conveyance_dates.insert().values(data_dict)
+    elif table == "land_use_codes":
+        stmt = land_use_codes.insert().values(data_dict)
     else:
+        print("The insert query has not been defined")
         return
 
     execute_query(stmt)
