@@ -3,6 +3,8 @@ from download_file import download_file
 import process_file
 from datetime import date
 
+# trdt
+
 current_date = date.today()
 #current_date = date(2022, 1, 3)
 URL_DATE = current_date.strftime("%m/%d/%Y")
