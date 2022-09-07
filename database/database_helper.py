@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Date, Float, Boolean
 from sqlalchemy import select
 from sqlalchemy import text
+import os
 
 metadata = MetaData()
 
@@ -41,7 +42,8 @@ land_use_codes = Table('land_use_codes', metadata,
                        Column('active', Boolean)
                        )
 
-db_engine = create_engine('sqlite:///franklinCountyConveyances.sqlite', echo=True)
+url = os.environ.get("DATABASE_URL")
+db_engine = create_engine(url, echo=True)
 print(db_engine)
 
 
@@ -64,6 +66,20 @@ def execute_query(query=''):
             connection.execute(query)
         except Exception as e:
             print(e)
+
+
+def execute_query_return_results(query=''):
+    if query == '': return
+
+    with db_engine.connect() as connection:
+        try:
+            result = connection.execute(query)
+        except Exception as e:
+            print(e)
+        else:
+            results = result.all()
+            result.close()
+            return results
 
 
 def execute_select_query(table, field, value):

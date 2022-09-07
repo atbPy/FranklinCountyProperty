@@ -93,8 +93,8 @@ def open_and_read_file(download_file, file_date, current_date):
             database_helper.update_record("conveyance_dates", f"'conveyance_dates.conveyance_date'='{file_date}'",
                                           conveyance_date_record)
 
-    database_helper.print_all_data("conveyances")
-    database_helper.print_all_data("land_use_codes")
-    database_helper.print_all_data("conveyance_parcels")
-    database_helper.print_all_data("conveyance_dates")
+    #database_helper.print_all_data("conveyances")
+    #database_helper.print_all_data("land_use_codes")
+    #database_helper.print_all_data("conveyance_parcels")
+    #database_helper.print_all_data("conveyance_dates")
     csv_file.close()
