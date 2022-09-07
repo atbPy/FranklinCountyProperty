@@ -4,6 +4,10 @@ from sqlalchemy import select
 from sqlalchemy import text
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 metadata = MetaData()
 
 # Define the tables

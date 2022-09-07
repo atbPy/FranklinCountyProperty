@@ -46,4 +46,4 @@ def run_queries(current_date):
 🧮️Average of Sales: ${sales_average[0][0]:,.2f}""")
 
 
-run_queries('2022-09-01')
+run_queries('2022-09-06')
