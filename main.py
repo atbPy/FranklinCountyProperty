@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from download_file import download_file
 import process_file
+import twitter
 
 # def daterange(start_date, end_date):
 #     for n in range(int((end_date - start_date).days)):
@@ -28,3 +29,5 @@ DOWNLOAD_FILE = f"downloads/Conveyances-{FILE_DATE}.csv"
 download_file(DOWNLOAD_FILE, DOWNLOAD_URL)
 
 process_file.open_and_read_file(DOWNLOAD_FILE, FILE_DATE, current_date)
+
+twitter.run_queries(current_date)
