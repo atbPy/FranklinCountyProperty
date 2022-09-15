@@ -14,7 +14,7 @@ import twitter
 #     print(current_date.strftime("%Y-%m-%d"))
 
 current_date = date.today()
-#current_date = date(2022, 9, 4)
+#current_date = date(2022, 9, 13)
 URL_DATE = current_date.strftime("%m/%d/%Y")
 FILE_DATE = current_date.strftime("%Y-%m-%d")
 
