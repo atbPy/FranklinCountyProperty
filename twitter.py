@@ -21,12 +21,12 @@ def run_queries(current_date):
     total_money_transfers_query = f"""SELECT COUNT(conveyance_number)
                             FROM conveyances
                             WHERE
-                                sale_date = '{current_date}' AND sale_type = 'LB'"""
+                                sale_date = '{current_date}' AND sale_type <> ''"""
 
     sales_average_query = f"""SELECT AVG(sale_amount)
                         FROM conveyances
                         WHERE 
-                            sale_date = '{current_date}' AND sale_type = 'LB'"""
+                            sale_date = '{current_date}' AND sale_type <> ''"""
 
     highest = database_helper.execute_query_return_results(daily_highest_query)
     total = database_helper.execute_query_return_results(total_conveyances_query)
