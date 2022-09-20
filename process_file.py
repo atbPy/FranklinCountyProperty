@@ -9,13 +9,15 @@ def open_and_read_file(download_file, file_date, current_date):
         next(csv_file)
         conveyances = csv.reader(csv_file, delimiter=',', quotechar='"')
         record_count = 0
+        year = current_date.strftime("%Y")
 
         for row in conveyances:
             record_count += 1
 
             # Adds a record for each Conveyance Record
-            conveyance_record_key = row[0]
-            conveyance_record = {"conveyance_number": conveyance_record_key,
+            conveyance_record_key = year + "|" + row[0]
+            conveyance_record = {"conveyance_number_id": conveyance_record_key,
+                                 "conveyance_number": row[0],
                                  "sale_date": datetime.strptime(row[2], '%Y-%m-%d'),
                                  "sale_amount": row[3],
                                  "sale_type": row[4],
@@ -28,13 +30,13 @@ def open_and_read_file(download_file, file_date, current_date):
                                  }
 
             # If the record already exists, then just update the fields instead of inserting
-            if (database_helper.execute_select_query("conveyances", "conveyance_number", conveyance_record_key)) == 0:
+            if (database_helper.execute_select_query("conveyances", "conveyance_number_id", conveyance_record_key)) == 0:
                 database_helper.insert_record("conveyances", conveyance_record)
             else:
                 # Remove the key from the dictionary, since it is not used in update
-                conveyance_record.pop("conveyance_number")
+                conveyance_record.pop("conveyance_number_id")
                 database_helper.update_record("conveyances",
-                                              f"'conveyances.conveyance_number'='{conveyance_record_key}'",
+                                              f"'conveyances.conveyance_number_id'='{conveyance_record_key}'",
                                               conveyance_record)
 
             # Make sure the Land Use Code (LUC) is in the database.
@@ -58,9 +60,9 @@ def open_and_read_file(download_file, file_date, current_date):
                                               land_use_code)
 
             # Add a record for Conveyance and Parcel Number combination
-            conveyance_parcel_key = row[0] + "|" + row[1]
-            conveyance_parcel_record = {"conveyance_parcel": conveyance_parcel_key,
-                                        "conveyance_number_id": row[0],
+            conveyance_parcel_key = year + "|" + row[0] + "|" + row[1]
+            conveyance_parcel_record = {"conveyance_parcel_id": conveyance_parcel_key,
+                                        "conveyance_number_id": conveyance_record_key,
                                         "parcel_number": row[1],
                                         "conveyance_date": datetime.strptime(row[2], '%Y-%m-%d'),
                                         "LUC": land_use_code_key,
@@ -68,13 +70,13 @@ def open_and_read_file(download_file, file_date, current_date):
                                         }
 
             # If the record already exists, then just update the fields instead of inserting
-            if (database_helper.execute_select_query("conveyance_parcels", "conveyance_parcel", conveyance_parcel_key)) == 0:
+            if (database_helper.execute_select_query("conveyance_parcels", "conveyance_parcel_id", conveyance_parcel_key)) == 0:
                 database_helper.insert_record("conveyance_parcels", conveyance_parcel_record)
             else:
                 # Remove the key from the dictionary, since it is not used in update
-                conveyance_parcel_record.pop("conveyance_parcel")
+                conveyance_parcel_record.pop("conveyance_parcel_id")
                 database_helper.update_record("conveyance_parcels",
-                                              f"'conveyance_parcels.conveyance_parcel'='{conveyance_parcel_key}'",
+                                              f"'conveyance_parcels.conveyance_parcel_id'='{conveyance_parcel_key}'",
                                               conveyance_parcel_record)
 
         # Add a record for when a conveyance file was processed in event there are updates

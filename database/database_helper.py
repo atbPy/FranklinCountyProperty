@@ -12,7 +12,8 @@ metadata = MetaData()
 
 # Define the tables
 conveyances = Table('conveyances', metadata,
-                    Column('conveyance_number', String, primary_key=True),
+                    Column('conveyance_number_id', String, primary_key=True),
+                    Column('conveyance_number', String),
                     Column('sale_date', Date),
                     Column('sale_amount', Float),
                     Column('sale_type', String),
@@ -25,8 +26,8 @@ conveyances = Table('conveyances', metadata,
                     )
 
 conveyance_parcels = Table('conveyance_parcels', metadata,
-                           Column('conveyance_parcel', String, primary_key=True),
-                           Column('conveyance_number_id', String, ForeignKey('conveyances.conveyance_number')),
+                           Column('conveyance_parcel_id', String, primary_key=True),
+                           Column('conveyance_number_id', String, ForeignKey('conveyances.conveyance_number_id')),
                            Column('parcel_number', String),
                            Column('conveyance_date', Date),
                            Column('LUC', String, ForeignKey('land_use_codes.land_use_code')),
