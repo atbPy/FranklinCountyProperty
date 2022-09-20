@@ -1,3 +1,5 @@
+from datetime import date
+
 from database import database_helper
 
 
@@ -39,5 +41,10 @@ def run_queries(current_date):
 💵Total Sales: {total_money_transfer[0][0]}
 🧮️Average of Sales: ${sales_average[0][0]:,.2f}
 #FranklinCountyOH #Ohio #RealEstate""")
+
+
+if __name__ == "__main__":
+    current_date = date(2022, 9, 19)
+    run_queries(current_date)
 
 
