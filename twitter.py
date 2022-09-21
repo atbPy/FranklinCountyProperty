@@ -36,7 +36,7 @@ def run_queries(current_date):
     sales_average = database_helper.execute_query_return_results(sales_average_query)
 
     print(f"""Here are the stats for {current_date.strftime("%m/%d/%Y")}
-💰Highest Sale: ${highest[0][2]:,.2f}
+💰Highest Sale: ${highest[0][3]:,.2f}
 🏠Total Transfers: {total[0][0]}
 💵Total Sales: {total_money_transfer[0][0]}
 🧮️Average of Sales: ${sales_average[0][0]:,.2f}
@@ -44,7 +44,7 @@ def run_queries(current_date):
 
 
 if __name__ == "__main__":
-    current_date = date(2022, 9, 19)
+    current_date = date(2022, 9, 20)
     run_queries(current_date)
 
 
